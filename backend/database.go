@@ -20,15 +20,15 @@ func initDB() {
     }
 
     // สร้างตาราง `users` ถ้ายังไม่มีอยู่ในฐานข้อมูล
-    createTable := `
-    CREATE TABLE IF NOT EXISTS users (
+    query := `
+    CREATE TABLE IF NOT EXISTS userinformations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT,
-        age INTEGER
+        nickname varchar(10),
+        email varchar(40),
+        password varchar(10)
     );`
     
-    _, err = db.Exec(createTable)
+    _, err = db.Exec(query)
     if err != nil {
         log.Fatal("Error creating table: ", err)
     }
