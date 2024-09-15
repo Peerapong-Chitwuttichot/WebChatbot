@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: var(--primary-color);
+}
+
+#chat-container {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: var(--primary-color);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-box {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    max-height: 400px;
+}
+
+#messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#messages li {
+    margin-bottom: 10px;
+}
+
+#message-input {
+    width: calc(100% - 90px);
+    padding: 5px;
+}
+
+#send-button {
+    width: 80px;
+    padding: 5px;
+    background-color: var(--base-color);
+}
+
+.icon-moon {
+    width: 30px;
+    cursor: pointer;
+}
+
+:root {
+    /*--primary-color: #edf2fc;
+    --secondary-color: #212121;
+    --text-color: #333;
+    --bg-botton: #f7c442;
+    --bg-massage:  #f7c442;
+*/
+        }
+
+    .darkmode {
+    --primary-color: #15202B;
+    --secondary-color: #192734;
+    --text-color: #edf2fc;
+    --bg-botton: #8899A6;
+    --bg-massage: #74aff7;
+    }
+/*#theme-switch{
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 20px;
+    right: 50px;
+}

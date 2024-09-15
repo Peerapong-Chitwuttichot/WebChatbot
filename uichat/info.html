@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phaet Sanam Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* จัดให้กลางหน้าจอ */
+            justify-content: center; /* จัดให้กลางหน้าจอ */
+            height: 100vh;
+            margin: 0;
+            background-color: #F5F5F5; /* พื้นหลังสีขาว */
+            color: #333; /* สีข้อความ */
+            position: relative; /* ทำให้สามารถจัดตำแหน่งปุ่มใหม่ได้ */
+        }
+        .image-container {
+            position: absolute; /* ใช้ตำแหน่งแบบสัมพัทธ์ */
+            top: 20px; /* ระยะห่างจากด้านบน */
+            left: 0px; /* ระยะห่างจากด้านซ้าย */
+        }
+        .image-container img {
+            max-width: 100%; /* ขนาดของรูปภาพไม่เกินขนาดของ container */
+            height: 100px;
+            border-radius: 8px; /* ทำให้มุมของรูปภาพโค้ง */
+        }
+        .clear-button {
+            position: absolute; /* ใช้ตำแหน่งแบบสัมพัทธ์ */
+            top: 250px; /* ระยะห่างจากด้านบน */
+            left: 20px; /* ระยะห่างจากด้านซ้าย */
+            padding: 15px;
+            background-color: #f7c442; /* ปุ่มสีส้ม */
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /*.icon-moon img {
+            position: absolute; /* ใช้ตำแหน่งแบบสัมพัทธ์ 
+            top: 10px;
+            right: 20px;
+            width: 30px;
+            cursor: pointer;
+        }
+        */
+        .chat-container-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* จัดให้กลางหน้าจอ */
+            width: 100%;
+            height: calc(100vh - 60px); /* ปรับให้แชทไม่เกินขนาดของหน้าจอ */
+            overflow-y: auto; /* ทำให้สามารถเลื่อนดูแชทที่สร้างใหม่ได้ */
+            padding-top: 60px; /* เพิ่ม padding ด้านบนเพื่อไม่ให้ทับกับรูปภาพและปุ่ม */
+        }
+        .chat-container {
+            width: 80%; /* ปรับขนาดความกว้างของแชท */
+            max-width: 1800px; /* ขนาดสูงสุด */
+            height: 100%;
+            background-color: #FFFFFF; /* พื้นหลังสีขาวของแชท */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* เงาเบา */
+            overflow: hidden;
+            box-sizing: border-box; /* รวมขอบและการเติมภายในในการกำหนดขนาด */
+            margin-bottom: 20px; /* ระยะห่างระหว่างแชท */
+        }
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #E0E0E0; /* สีเส้นขอบเบา */
+        }
+        .chat-message {
+            margin: 5px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 25%; /* ปรับความกว้าง */
+            word-wrap: break-word;
+        }
+        .chat-message.user {
+            background-color: #f7c442; /* สีพื้นหลังของข้อความผู้ใช้ */
+            color: #333;
+            margin-left: auto;
+            text-align: left;
+        }
+        .chat-message.bot {
+            background-color: #f7c442; /* สีพื้นหลังของข้อความบอท */
+            color: #333;
+        }
+        .input-area {
+            display: flex;
+            padding: 20px;
+            background-color: #F9F9F9; /* สีพื้นหลังของ input area */
+            border-top: 1px solid #E0E0E0; /* สีเส้นขอบเบา */
+        }
+        .input-area input {
+            flex-grow: 1;
+            padding: 15px;
+            border: 1px solid #D0D0D0; /* สีเส้นขอบของช่องอินพุต */
+            border-radius: 8px;
+            background-color: #FFFFFF; /* สีพื้นหลังของช่องอินพุต */
+            color: #333;
+            outline: none;
+            box-sizing: border-box; /* รวมขอบและการเติมภายในในการกำหนดขนาด */
+        }
+        .input-area button {
+            padding: 15px 20px;
+            border: none;
+            background-color: #f7c442; /* สีพื้นหลังของปุ่มส่ง */
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .input-area button:disabled {
+            background-color: #D0D0D0; /* สีพื้นหลังของปุ่มเมื่อปิดการใช้งาน */
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button id="theme-switch">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M479.82-105q-156.17 0-265.5-109.32Q105-323.65 105-479.82 105-636 214.38-746 323.75-856 480-856q11 0 22.5.5T525-853q-29 33-47 74t-18 87q0 97.08 68.54 165.04T695-459q45 0 86-17.5t73-46.5q1 11 1.5 21.21.5 10.2.5 20.79 0 156-110 266T479.82-105Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM223-417H17v-126h206v126Zm720 0H737v-126h206v126ZM417-737v-206h126v206H417Zm0 720v-206h126v206H417ZM255-616 123-745l88-93 130 130-86 92Zm494 494L618-253l86-89 133 127-88 93ZM618-704l127-133 93 88-130 130-90-85ZM122-211l131-131 89 86-127 133-93-88Z"/></svg>
+        </button>
+    </header>
+    <div class="image-container">
+        <nav>
+        <img src="img/Phaet-sanam.png" alt="image-container">
+    </nav>
+    </div>
+    <div class="icon-moon">
+    <img src="img/moon." id="icon-moon">
+    </div>
+    <button class="clear-button" id="clearButton">Clear</button>
+    <div class="chat-container-wrapper" id="chatContainerWrapper">
+        <!-- แชทใหม่จะถูกเพิ่มที่นี่ -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const clearButton = document.getElementById('clearButton');
+            const chatContainerWrapper = document.getElementById('chatContainerWrapper');
+
+            // ฟังก์ชันเพื่อเพิ่มข้อความไปที่หน้าต่างแชท
+            function addMessage(windowElement, message, isUser = false) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message');
+                if (isUser) {
+                    messageElement.classList.add('user');
+                } else {
+                    messageElement.classList.add('bot');
+                }
+                messageElement.textContent = message;
+                windowElement.appendChild(messageElement);
+                windowElement.scrollTop = windowElement.scrollHeight; // เลื่อนหน้าต่างแชทไปด้านล่าง
+            }
+
+            // ฟังก์ชันเพื่อสร้างแชทใหม่
+            function createNewChat() {
+                // สร้าง container สำหรับแชทใหม่
+                const chatContainer = document.createElement('div');
+                chatContainer.className = 'chat-container';
+
+                // สร้าง chat window
+                const chatWindow = document.createElement('div');
+                chatWindow.className = 'chat-window';
+
+                // สร้าง input area
+                const inputArea = document.createElement('div');
+                inputArea.className = 'input-area';
+
+                const userInput = document.createElement('input');
+                userInput.type = 'text';
+                userInput.placeholder = 'Type a message...';
+
+                const sendButton = document.createElement('button');
+                sendButton.textContent = 'Send';
+
+                inputArea.appendChild(userInput);
+                inputArea.appendChild(sendButton);
+
+                chatContainer.appendChild(chatWindow);
+                chatContainer.appendChild(inputArea);
+                chatContainerWrapper.appendChild(chatContainer);
+
+                // เมื่อกดปุ่ม Send
+                sendButton.addEventListener('click', () => {
+                    const message = userInput.value.trim();
+                    if (message !== '') {
+                        addMessage(chatWindow, message, true);  // แสดงข้อความของผู้ใช้
+                        userInput.value = '';       // ล้างช่องอินพุต
+
+                        // จำลองการตอบกลับของบอท
+                        setTimeout(() => {
+                            addMessage(chatWindow, 'Bot: This is a response from the bot.');
+                        }, 500);
+                    }
+                });
+
+                // ส่งข้อความเมื่อกด Enter
+                userInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        sendButton.click();
+                    }
+                });
+            }
+
+            // ฟังก์ชันสำหรับการเคลียร์แชททั้งหมด
+            clearButton.addEventListener('click', () => {
+                chatContainerWrapper.innerHTML = ''; // เคลียร์ทั้งหมดใน wrapper
+                createNewChat(); // สร้างแชทใหม่
+            });
+
+            // สร้างแชทเริ่มต้น
+            createNewChat();
+        });
+    </script>
+</body>
+</html>
